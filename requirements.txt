@@ -1,0 +1,6 @@
+llama-index==0.12.23
+llama-index-llms-gemini==0.4.11
+llama-index-vector-stores-qdrant==0.4.3
+python-dotenv==1.0.1
+qdrant-client==1.13.3
+streamlit==1.43.0
