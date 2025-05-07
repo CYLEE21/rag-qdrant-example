@@ -27,11 +27,11 @@ Settings.embed_model = GeminiEmbedding(
     model_name=embed_model, api_key=GEMINI_KEY, title="this is a document"
 )
 
-vector_store = QdrantVectorStore(client=qdrant_client, collection_name="zh-data-example")
+vector_store = QdrantVectorStore(client=qdrant_client, collection_name="scholar-data-example")
 # Create a VectorStoreIndex from the documents
 index = VectorStoreIndex.from_vector_store(vector_store=vector_store)
 # Query the index
-query_engine = index.as_query_engine()
+query_engine = index.as_query_engine(similarity_top_k=5)
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
@@ -40,16 +40,12 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-if prompt := st.chat_input("what's up?"):
+if prompt := st.chat_input("Ask me something..."):
     with st.chat_message(name="user"):
         st.markdown(prompt)
     st.session_state.messages.append({"role":"user", "content":prompt})
-    final_prompt = f"""
-    你現在是一位人類圖專家幫助管理者(Dia)為顧客提供有關人類圖相關的問題解答，請根據顧客的問題：{prompt}，
-    你可以忽略根據你的現有知識提供有關人類圖的內容，如果顧客詢問不相關的問題請一律回覆：我無法回答此問題，請嘗試新的問題。
-    """
 
-    response = query_engine.query(final_prompt)
+    response = query_engine.query(prompt)
 
     with st.chat_message(name="assistent"):
         st.markdown(response)
