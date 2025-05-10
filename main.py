@@ -11,6 +11,7 @@ import streamlit as st
 load_dotenv(".env")
 GEMINI_KEY = os.environ.get("GEMINI_KEY")
 QDRANT_KEY = os.environ.get("QDRANT_KEY")
+COLLECTION = os.environ.get("COLLECTION")
 
 gemini_model = "models/gemini-2.0-flash"
 embed_model = "models/gemini-embedding-exp-03-07"
@@ -27,7 +28,7 @@ Settings.embed_model = GeminiEmbedding(
     model_name=embed_model, api_key=GEMINI_KEY, title="this is a document"
 )
 
-vector_store = QdrantVectorStore(client=qdrant_client, collection_name="scholar-data-example")
+vector_store = QdrantVectorStore(client=qdrant_client, collection_name=COLLECTION)
 # Create a VectorStoreIndex from the documents
 index = VectorStoreIndex.from_vector_store(vector_store=vector_store)
 # Query the index
